@@ -90,20 +90,20 @@
             hand.style.transform = `rotate(${rotation}deg)`;
 
             // Update sun/moon position
-            const isDaytime = hours >= 6 && hours < 19;
+            const isDaytime = hours >= 6 && hours < 18;
             sunMoon.style.backgroundColor = isDaytime ? 'yellow' : 'lightgray';
             
             let angle;
             if (hours >= 6 && hours < 18) {
-                // Day time: move from right to left
-                angle = ((hours - 6) / 12) * 180 + 90;
-            } else {
+                // Day time: move from left to right, peaking at noon
+                angle = ((hours - 6) / 12) * 180;
+            } else if (hours >= 18 || hours < 6) {
                 // Night time: stay at the bottom
-                angle = 270;
+                angle = 180;
             }
             const radius = 140; // Slightly smaller than the clock radius
             const x = Math.cos(angle * Math.PI / 180) * radius + 150;
-            const y = Math.sin(angle * Math.PI / 180) * radius + 150;
+            const y = -Math.sin(angle * Math.PI / 180) * radius + 150;
             sunMoon.style.left = `${x - 10}px`;
             sunMoon.style.top = `${y - 10}px`;
         }
