@@ -31,21 +31,9 @@
             width: 2px;
             height: 45%;
         }
-        .numbers {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            color: white;
-        }
-        .number {
-            position: absolute;
-            width: 100%;
-            font-size: 14px;
-        }
         .time-display {
             position: absolute;
-            top: 30%;
+            top: 35%;
             left: 50%;
             transform: translateX(-50%);
             color: white;
@@ -53,7 +41,7 @@
         }
         .minutes-left {
             position: absolute;
-            bottom: 30%;
+            bottom: 35%;
             left: 50%;
             transform: translateX(-50%);
             color: white;
@@ -61,11 +49,8 @@
         }
         .sun-moon {
             position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background-color: yellow;
         }
@@ -73,7 +58,6 @@
 </head>
 <body>
     <div class="clock">
-        <div class="numbers"></div>
         <div class="hand"></div>
         <div class="time-display"></div>
         <div class="minutes-left"></div>
@@ -86,21 +70,6 @@
         const timeDisplay = document.querySelector('.time-display');
         const minutesLeftDisplay = document.querySelector('.minutes-left');
         const sunMoon = document.querySelector('.sun-moon');
-        const numbers = document.querySelector('.numbers');
-
-        // Add numbers around the clock
-        const numberPositions = [1440, 1320, 1200, 1080, 960, 840, 720, 600, 480, 360, 240, 120];
-        numberPositions.forEach((num, index) => {
-            const element = document.createElement('div');
-            element.textContent = num;
-            element.classList.add('number');
-            const angle = (index * 30 - 90) * (Math.PI / 180);
-            const x = Math.cos(angle) * 130 + 150;
-            const y = Math.sin(angle) * 130 + 150;
-            element.style.left = `${x - 15}px`;
-            element.style.top = `${y - 7}px`;
-            numbers.appendChild(element);
-        });
 
         function updateClock() {
             const now = new Date();
@@ -120,21 +89,23 @@
             const rotation = (totalMinutes / 1440) * 360;
             hand.style.transform = `rotate(${rotation}deg)`;
 
-            // Update sun/moon
+            // Update sun/moon position
             const isDaytime = hours >= 6 && hours < 19;
             sunMoon.style.backgroundColor = isDaytime ? 'yellow' : 'lightgray';
-            sunMoon.style.boxShadow = isDaytime ? '0 0 10px yellow' : '0 0 10px white';
-
-            // Adjust sun/moon position
-            let sunMoonAngle;
+            
+            let angle;
             if (hours >= 6 && hours < 18) {
-                // Day time: move from bottom to top
-                sunMoonAngle = ((hours - 6) / 12) * 180;
+                // Day time: move from right to left
+                angle = ((hours - 6) / 12) * 180 + 90;
             } else {
                 // Night time: stay at the bottom
-                sunMoonAngle = 0;
+                angle = 270;
             }
-            sunMoon.style.transform = `translateX(-50%) rotate(${sunMoonAngle}deg) translateY(-120px) rotate(-${sunMoonAngle}deg)`;
+            const radius = 140; // Slightly smaller than the clock radius
+            const x = Math.cos(angle * Math.PI / 180) * radius + 150;
+            const y = Math.sin(angle * Math.PI / 180) * radius + 150;
+            sunMoon.style.left = `${x - 10}px`;
+            sunMoon.style.top = `${y - 10}px`;
         }
 
         // Update clock every second
